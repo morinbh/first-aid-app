@@ -1,26 +1,40 @@
-function App() {
-  // This is our data "object" for one emergency
-  const emergency = {
-    title: "Choking",
-    action: "Give 5 back blows and 5 abdominal thrusts.",
-    severity: "Critical"
-  };
-
+// 1. This is the "Blueprint" for all emergency cards
+function EmergencyCard(props) {
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>First Aid Helper</h1>
+    <div style={{ 
+      border: '1px solid #ddd', 
+      padding: '15px', 
+      borderRadius: '8px',
+      backgroundColor: '#f9f9f9',
+      marginBottom: '10px' 
+    }}>
+      <h2 style={{ color: '#d32f2f', margin: '0 0 10px 0' }}>{props.title}</h2>
+      <p><strong>Steps:</strong> {props.action}</p>
+    </div>
+  );
+}
+
+// 2. This is your main App
+function App() {
+  return (
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'sans-serif' }}>
+      <h1>First Aid Guide</h1>
       
-      {/* This is our first 'Card' */}
-      <div style={{ 
-        border: '1px solid #ddd', 
-        padding: '15px', 
-        borderRadius: '8px',
-        backgroundColor: '#fff1f1' 
-      }}>
-        <h2 style={{ color: 'red' }}>{emergency.title}</h2>
-        <p><strong>What to do:</strong> {emergency.action}</p>
-        <span style={{ fontSize: '12px', color: '#666' }}>Status: {emergency.severity}</span>
-      </div>
+      {/* 3. Now we can use the blueprint as many times as we want */}
+      <EmergencyCard 
+        title="Choking" 
+        action="5 back blows and 5 abdominal thrusts." 
+      />
+      
+      <EmergencyCard 
+        title="Severe Bleeding" 
+        action="Apply direct pressure with a clean cloth." 
+      />
+
+      <EmergencyCard 
+        title="Burns" 
+        action="Run under lukewarm water for at least 20 minutes." 
+      />
     </div>
   );
 }
