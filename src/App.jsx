@@ -1,4 +1,4 @@
-// 1. This is the "Blueprint" for all emergency cards
+//  "Blueprint" for all emergency cards
 function EmergencyCard(props) {
   return (
     <div style={{ 
@@ -14,7 +14,7 @@ function EmergencyCard(props) {
   );
 }
 
-// 2. This is your main App
+//  main App
 function App() {
   return (
     <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'sans-serif' }}>
