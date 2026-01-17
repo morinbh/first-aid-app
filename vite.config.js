@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react"; // Changed from react-refresh
+import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
@@ -7,18 +7,30 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      icons: [
-        {
-          src: "pwa-192x192.png",
-          sizes: "192x192",
-          type: "image/png",
-        },
-        {
-          src: "pwa-512x512.png",
-          sizes: "512x512",
-          type: "image/png",
-        },
+      includeAssets: [
+        "pwa-192x192.png",
+        "pwa-512x512.png",
+        "favicon.ico",
+        "robots.txt",
       ],
+      manifest: {
+        name: "First Aid MDA Helper",
+        short_name: "FirstAid",
+        description: "Life-saving emergency instructions",
+        theme_color: "#ffffff",
+        icons: [
+          {
+            src: "pwa-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+      },
     }),
   ],
 });
