@@ -100,6 +100,8 @@ function App() {
   const [selectedSymptom, setSelectedSymptom] = useState(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [locationInfo, setLocationInfo] = useState(null); // ישמור את הכתובת או הקואורדינטות
+  const [loadingLocation, setLoadingLocation] = useState(false); // לציון שהמערכת מחפשת מיקום
 
   const resetAll = () => {
     window.speechSynthesis.cancel();
@@ -120,9 +122,43 @@ function App() {
       const filteredSymptoms = Object.keys(SYMPTOMS).filter(name => 
         name.includes(searchTerm)
       );
+
+      const getLocation = () => {
+        setLoadingLocation(true);
+        if (!navigator.geolocation) {
+          setLocationInfo("הדפדפן שלך לא תומך בזיהוי מיקום");
+          setLoadingLocation(false);
+          return;
+        }
+      
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            // נציג קואורדינטות כברירת מחדל
+            setLocationInfo(`קו רוחב: ${latitude.toFixed(5)}, קו אורך: ${longitude.toFixed(5)}`);
+            setLoadingLocation(false);
+          },
+          (error) => {
+            setLocationInfo("לא ניתן לגשת למיקום. וודא שה-GPS פועל.");
+            setLoadingLocation(false);
+          }
+        );
+      };
     
       return (
         <div>
+          <div style={locationContainerStyle}>
+            <button onClick={getLocation} style={locationButtonStyle}>
+              📍 {loadingLocation ? "מחפש מיקום..." : "איפה אני?"}
+            </button>
+            {locationInfo && (
+              <div style={locationTextStyle}>
+                <strong>המיקום שלך:</strong> <br />
+                {locationInfo}
+                <p style={{fontSize: '12px', margin: '5px 0'}}>הקרא נתונים אלו למוקדן מד"א</p>
+              </div>
+            )}
+          </div>
           {/* שורת חיפוש */}
           <input 
             type="text"
@@ -144,6 +180,8 @@ function App() {
             <p style={{ textAlign: 'center', color: 'red' }}>לא נמצא תרחיש מתאים. חייג 101 לסיוע טלפוני.</p>
           )}
         </div>
+
+        
       );
     }
 
@@ -213,6 +251,35 @@ const searchStyle = {
   fontSize: '16px',
   boxSizing: 'border-box', // שומר שה-padding לא יהרוס את הרוחב
   textAlign: 'right'
+};
+const locationContainerStyle = {
+  backgroundColor: '#f9f9f9',
+  padding: '15px',
+  borderRadius: '12px',
+  marginBottom: '20px',
+  border: '1px solid #eee',
+  textAlign: 'center'
+};
+
+const locationButtonStyle = {
+  backgroundColor: '#34495e',
+  color: 'white',
+  padding: '10px 20px',
+  border: 'none',
+  borderRadius: '25px',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  fontSize: '16px'
+};
+
+const locationTextStyle = {
+  marginTop: '10px',
+  fontSize: '16px',
+  color: '#2c3e50',
+  backgroundColor: '#fff',
+  padding: '10px',
+  borderRadius: '8px',
+  border: '1px dashed #bdc3c7'
 };
 
 export default App;
