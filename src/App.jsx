@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './App.css';
 
 
 const SYMPTOMS = {
@@ -100,8 +101,8 @@ function App() {
   const [selectedSymptom, setSelectedSymptom] = useState(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [locationInfo, setLocationInfo] = useState(null); // ישמור את הכתובת או הקואורדינטות
-  const [loadingLocation, setLoadingLocation] = useState(false); // לציון שהמערכת מחפשת מיקום
+  const [locationInfo, setLocationInfo] = useState(null);
+  const [loadingLocation, setLoadingLocation] = useState(false);
 
   const resetAll = () => {
     window.speechSynthesis.cancel();
@@ -116,72 +117,45 @@ function App() {
     window.speechSynthesis.speak(utterance);
   };
 
+  const getLocation = () => {
+    setLoadingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocationInfo(`קו רוחב: ${pos.coords.latitude.toFixed(5)}, קו אורך: ${pos.coords.longitude.toFixed(5)}`);
+        setLoadingLocation(false);
+      },
+      () => {
+        setLocationInfo("שגיאה בזיהוי מיקום");
+        setLoadingLocation(false);
+      }
+    );
+  };
+
   const renderContent = () => {
     if (!selectedSymptom) {
-      // סינון הרשימה לפי מה שהוקלד
-      const filteredSymptoms = Object.keys(SYMPTOMS).filter(name => 
-        name.includes(searchTerm)
-      );
-
-      const getLocation = () => {
-        setLoadingLocation(true);
-        if (!navigator.geolocation) {
-          setLocationInfo("הדפדפן שלך לא תומך בזיהוי מיקום");
-          setLoadingLocation(false);
-          return;
-        }
-      
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            // נציג קואורדינטות כברירת מחדל
-            setLocationInfo(`קו רוחב: ${latitude.toFixed(5)}, קו אורך: ${longitude.toFixed(5)}`);
-            setLoadingLocation(false);
-          },
-          (error) => {
-            setLocationInfo("לא ניתן לגשת למיקום. וודא שה-GPS פועל.");
-            setLoadingLocation(false);
-          }
-        );
-      };
-    
+      const filtered = Object.keys(SYMPTOMS).filter(n => n.includes(searchTerm));
       return (
         <div>
-          <div style={locationContainerStyle}>
-            <button onClick={getLocation} style={locationButtonStyle}>
-              📍 {loadingLocation ? "מחפש מיקום..." : "איפה אני?"}
+          <div className="location-container">
+            <button onClick={getLocation} className="location-button">
+              📍 {loadingLocation ? "מחפש..." : "איפה אני?"}
             </button>
-            {locationInfo && (
-              <div style={locationTextStyle}>
-                <strong>המיקום שלך:</strong> <br />
-                {locationInfo}
-                <p style={{fontSize: '12px', margin: '5px 0'}}>הקרא נתונים אלו למוקדן מד"א</p>
-              </div>
-            )}
+            {locationInfo && <div className="location-text">{locationInfo}</div>}
           </div>
-          {/* שורת חיפוש */}
+
           <input 
-            type="text"
-            placeholder="חפש תרחיש (למשל: החייאה, חנק...)"
+            className="search-input"
+            placeholder="חפש תרחיש..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={searchStyle}
           />
-    
-          <p style={{ textAlign: 'center', color: '#666' }}>בחר את תרחיש החירום:</p>
           
-          {filteredSymptoms.map((name) => (
-            <button key={name} onClick={() => { setSelectedSymptom(name); setSearchTerm(""); }} style={menuButtonStyle}>
+          {filtered.map(name => (
+            <button key={name} className="menu-button" onClick={() => setSelectedSymptom(name)}>
               {name}
             </button>
           ))}
-          
-          {filteredSymptoms.length === 0 && (
-            <p style={{ textAlign: 'center', color: 'red' }}>לא נמצא תרחיש מתאים. חייג 101 לסיוע טלפוני.</p>
-          )}
         </div>
-
-        
       );
     }
 
@@ -189,11 +163,11 @@ function App() {
 
     if (currentData.isCategory && !selectedSubCategory) {
       return (
-        <div style={{ textAlign: 'center' }}>
-          <button onClick={resetAll} style={{ float: 'left', border:'none', background:'none', fontSize:'20px', cursor:'pointer' }}>✕</button>
-          <h3 style={{marginTop:'40px'}}>בחר סוג מטופל:</h3>
-          {Object.keys(currentData.subOptions).map((sub) => (
-            <button key={sub} onClick={() => setSelectedSubCategory(sub)} style={subButtonStyle}>
+        <div className="protocol-box">
+          <button onClick={resetAll} className="close-btn">✕ סגור</button>
+          <h3>בחר סוג מטופל:</h3>
+          {Object.keys(currentData.subOptions).map(sub => (
+            <button key={sub} className="sub-button" onClick={() => setSelectedSubCategory(sub)}>
               {sub}
             </button>
           ))}
@@ -209,77 +183,30 @@ function App() {
       : currentData.color;
 
     return (
-      <div style={{ border: '3px solid ' + finalColor, padding: '20px', borderRadius: '16px', backgroundColor: '#fff' }}>
-        <button onClick={resetAll} style={{ cursor: 'pointer', marginBottom: '10px' }}>← חזור לתפריט</button>
-        <h2 style={{ color: finalColor, marginTop: '10px' }}>{selectedSubCategory || selectedSymptom}</h2>
-        <button onClick={() => speak(finalSteps)} style={voiceButtonStyle}>🔊 השמע הנחיות</button>
-        <ul style={{ paddingRight: '20px' }}>
-          {finalSteps.map((s, i) => <li key={i} style={{ marginBottom: '15px', fontSize: '18px', lineHeight: '1.4' }}>{s}</li>)}
+      <div className="protocol-box">
+        <button onClick={resetAll} className="back-link">← חזור לתפריט</button>
+        <h2 >{selectedSubCategory || selectedSymptom}</h2>
+        <button onClick={() => speak(finalSteps)} className="voice-button">🔊 השמע הנחיות</button>
+        <ul>
+          {finalSteps.map((s, i) => <li key={i}>{s}</li>)}
         </ul>
       </div>
     );
   };
 
   return (
-    <div style={{ direction: 'rtl', padding: '20px', maxWidth: '400px', margin: '0 auto', fontFamily: 'Arial, sans-serif', paddingBottom: '120px' }}>
-      <h1 style={{ textAlign: 'center', color: '#d32f2f' }}>🚑 עזרה ראשונה מהירה</h1>
-      
+    <div className="app-container">
+      <h1 className="main-title">🚑 עזרה ראשונה </h1>
       {renderContent()}
 
       {/* כפתורי חירום קבועים */}
-      <div style={footerStyle}>
-        <button onClick={() => window.open('tel:101')} style={mdaButtonStyle}>🚑 מד"א (101)</button>
-        <button onClick={() => window.open('tel:100')} style={policeButtonStyle}>👮 משטרה (100)</button>
+      <div className="footer">
+        <button onClick={() => window.open('tel:101')} className="btn-mda">🚑 מד"א (101)</button>
+        <button onClick={() => window.open('tel:100')} className="btn-police">👮 משטרה (100)</button>
       </div>
     </div>
   );
 }
 
-// הגדרות עיצוב (Styles)
-const menuButtonStyle = { display: 'block', width: '100%', padding: '15px', margin: '10px 0', fontSize: '18px', fontWeight: 'bold', borderRadius: '12px', border: '1px solid #ccc', backgroundColor: 'white', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' };
-const subButtonStyle = { display: 'block', width: '100%', padding: '20px', margin: '15px 0', fontSize: '20px', backgroundColor: '#f0f0f0', border: '2px solid #ccc', borderRadius: '12px', cursor: 'pointer' };
-const voiceButtonStyle = { width: '100%', padding: '12px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '8px', marginBottom: '15px', fontWeight: 'bold', cursor: 'pointer' };
-const footerStyle = { position: 'fixed', bottom: '0', left: '0', right: '0', backgroundColor: 'white', padding: '15px', display: 'flex', gap: '10px', borderTop: '1px solid #ddd', boxShadow: '0 -2px 10px rgba(0,0,0,0.1)', maxWidth: '400px', margin: '0 auto' };
-const mdaButtonStyle = { flex: 1, padding: '15px', backgroundColor: '#d32f2f', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' };
-const policeButtonStyle = { flex: 1, padding: '15px', backgroundColor: '#1976d2', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' };
-const searchStyle = {
-  width: '100%',
-  padding: '12px',
-  marginBottom: '20px',
-  borderRadius: '8px',
-  border: '2px solid #ddd',
-  fontSize: '16px',
-  boxSizing: 'border-box', // שומר שה-padding לא יהרוס את הרוחב
-  textAlign: 'right'
-};
-const locationContainerStyle = {
-  backgroundColor: '#f9f9f9',
-  padding: '15px',
-  borderRadius: '12px',
-  marginBottom: '20px',
-  border: '1px solid #eee',
-  textAlign: 'center'
-};
-
-const locationButtonStyle = {
-  backgroundColor: '#34495e',
-  color: 'white',
-  padding: '10px 20px',
-  border: 'none',
-  borderRadius: '25px',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  fontSize: '16px'
-};
-
-const locationTextStyle = {
-  marginTop: '10px',
-  fontSize: '16px',
-  color: '#2c3e50',
-  backgroundColor: '#fff',
-  padding: '10px',
-  borderRadius: '8px',
-  border: '1px dashed #bdc3c7'
-};
 
 export default App;
