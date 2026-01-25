@@ -41,6 +41,37 @@ const SYMPTOMS = {
       }
     }
   },
+  "כוויות": {
+    steps: [
+      "הרחק את הנפגע ממקור החום",
+      "שטוף את מקום הכוויה במים זורמים ופושרים (לא קרים מדי!)",
+      "אין לפוצץ שלפוחיות",
+      "אין למרוח משחות, גבינת לבן או שמן",
+      "כסה את הכוויה בתחבושת סטרילית או בבד נקי",
+      "בכוויות נרחבות או בכוויות בפנים/דרכי הנשימה - חייג 101"
+    ],
+    color: "#e67e22"
+  },
+  "הכשת נחש": {
+    steps: [
+      "השכב את הנפגע והרגע אותו - מנע תזוזה ככל הניתן",
+      "קבע את האיבר המוכש",
+      "הסר בגדים לוחצים או תכשיטים",
+      "חייג מיד 101",
+      "אין למצוץ את הארס, אין להניח חסם עורקים ואין לקרר את המקום",
+      "נסה לצלם את הנחש מרחוק (אל תנסה לתפוס אותו!)"
+    ],
+    color: "#27ae60"
+  },
+  "דימום מהאף": {
+    steps: [
+      "השב את הנפגע והטה את ראשו מעט קדימה",
+      "לחץ על כנפי האף (החלק הרך) למשך 10 דקות רצופות",
+      "ניתן להניח רטייה קרה על גשר האף",
+      "אם הדימום לא פוסק לאחר 20 דקות - פנה לעזרה רפואית"
+    ],
+    color: "#c0392b"
+  },
   "חנק מגוף זר": {
     steps: [
       "התקשר למד׳׳א",
@@ -68,6 +99,7 @@ const SYMPTOMS = {
 function App() {
   const [selectedSymptom, setSelectedSymptom] = useState(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const resetAll = () => {
     window.speechSynthesis.cancel();
@@ -84,14 +116,33 @@ function App() {
 
   const renderContent = () => {
     if (!selectedSymptom) {
+      // סינון הרשימה לפי מה שהוקלד
+      const filteredSymptoms = Object.keys(SYMPTOMS).filter(name => 
+        name.includes(searchTerm)
+      );
+    
       return (
         <div>
+          {/* שורת חיפוש */}
+          <input 
+            type="text"
+            placeholder="חפש תרחיש (למשל: החייאה, חנק...)"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={searchStyle}
+          />
+    
           <p style={{ textAlign: 'center', color: '#666' }}>בחר את תרחיש החירום:</p>
-          {Object.keys(SYMPTOMS).map((name) => (
-            <button key={name} onClick={() => setSelectedSymptom(name)} style={menuButtonStyle}>
+          
+          {filteredSymptoms.map((name) => (
+            <button key={name} onClick={() => { setSelectedSymptom(name); setSearchTerm(""); }} style={menuButtonStyle}>
               {name}
             </button>
           ))}
+          
+          {filteredSymptoms.length === 0 && (
+            <p style={{ textAlign: 'center', color: 'red' }}>לא נמצא תרחיש מתאים. חייג 101 לסיוע טלפוני.</p>
+          )}
         </div>
       );
     }
@@ -153,5 +204,15 @@ const voiceButtonStyle = { width: '100%', padding: '12px', backgroundColor: '#4C
 const footerStyle = { position: 'fixed', bottom: '0', left: '0', right: '0', backgroundColor: 'white', padding: '15px', display: 'flex', gap: '10px', borderTop: '1px solid #ddd', boxShadow: '0 -2px 10px rgba(0,0,0,0.1)', maxWidth: '400px', margin: '0 auto' };
 const mdaButtonStyle = { flex: 1, padding: '15px', backgroundColor: '#d32f2f', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' };
 const policeButtonStyle = { flex: 1, padding: '15px', backgroundColor: '#1976d2', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer' };
+const searchStyle = {
+  width: '100%',
+  padding: '12px',
+  marginBottom: '20px',
+  borderRadius: '8px',
+  border: '2px solid #ddd',
+  fontSize: '16px',
+  boxSizing: 'border-box', // שומר שה-padding לא יהרוס את הרוחב
+  textAlign: 'right'
+};
 
 export default App;
