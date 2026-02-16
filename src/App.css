@@ -1,162 +1,411 @@
-/* src/App.css */
+/* ============================================
+   First Aid Emergency App – Professional Theme
+   RTL, high contrast, touch-friendly
+   ============================================ */
+
+:root {
+  /* Brand & emergency */
+  --color-emergency: #c41e3a;
+  --color-emergency-dark: #9a1830;
+  --color-emergency-light: #fef2f3;
+  --color-police: #1a237e;
+  --color-police-dark: #0d1442;
+  /* Neutrals */
+  --color-bg: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-border: #e2e4e9;
+  --color-text: #1a1d24;
+  --color-text-muted: #5c6169;
+  /* Feedback */
+  --color-voice: #0d8050;
+  --color-voice-hover: #0a6640;
+  --color-location: #2c3e50;
+  --color-location-hover: #1a252f;
+  /* Spacing & radius */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  /* Typography */
+  --font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Base container */
 .app-container {
   direction: rtl;
-  padding: 20px;
-  max-width: 400px;
+  min-height: 100vh;
+  padding: 0 0 140px;
+  max-width: 420px;
   margin: 0 auto;
-  font-family: Arial, sans-serif;
-  padding-bottom: 120px;
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
 }
 
-.back-link {
-  display: inline-block;
-  padding: 8px 16px;
-  background-color: #f1f1f1;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 15px;
-  transition: all 0.2s;
-  text-decoration: none;
-}
-
-/* עיצוב מיוחד לכפתור ה-X של הסגירה */
-.close-btn {
-  background: #ffeded;
-  color: #d32f2f;
-  border: 1px solid #ffcccc;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  cursor: pointer;
-}
-
+/* Header / title */
 .main-title {
   text-align: center;
-  color: #d32f2f;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-surface);
+  background: linear-gradient(
+    135deg,
+    var(--color-emergency) 0%,
+    var(--color-emergency-dark) 100%
+  );
+  margin: 0;
+  padding: var(--space-lg) var(--space-md);
+  box-shadow: var(--shadow-md);
+  letter-spacing: -0.02em;
 }
 
+/* Search */
 .search-input {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  border: 2px solid #ddd;
-  font-size: 16px;
+  padding: 14px var(--space-md);
+  margin: var(--space-lg) var(--space-md) var(--space-md);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  font-size: 1rem;
+  font-family: inherit;
   box-sizing: border-box;
   text-align: right;
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
+.search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-emergency);
+  box-shadow: 0 0 0 3px var(--color-emergency-light);
+}
+
+/* Main content area (menu) */
+.app-container > div {
+  padding: 0 var(--space-md);
+}
+
+/* Menu buttons – protocol list */
 .menu-button {
   display: block;
   width: 100%;
-  padding: 15px;
-  margin: 10px 0;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  background-color: white;
+  padding: var(--space-md) var(--space-lg);
+  margin: var(--space-sm) 0;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: right;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.2s;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.15s;
 }
 
 .menu-button:hover {
-  background-color: #f9f9f9;
+  background: var(--color-emergency-light);
+  border-color: rgba(196, 30, 58, 0.3);
 }
 
-.sub-button {
-  display: block;
-  width: 100%;
-  padding: 20px;
-  margin: 15px 0;
-  font-size: 20px;
-  background-color: #f0f0f0;
-  border: 2px solid #ccc;
-  border-radius: 12px;
-  cursor: pointer;
+.menu-button:active {
+  transform: scale(0.99);
 }
 
-.voice-button {
-  width: 100%;
-  padding: 12px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.protocol-box {
-  padding: 20px;
-  border-radius: 16px;
-  background-color: #fff;
-  margin-top: 10px;
-}
-
+/* Location block */
 .location-container {
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  border: 1px solid #eee;
+  background: var(--color-surface);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  margin: 0 var(--space-md) var(--space-lg);
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
   text-align: center;
 }
 
 .location-button {
-  background-color: #34495e;
+  background: var(--color-location);
   color: white;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 25px;
-  font-weight: bold;
+  border-radius: var(--radius-full);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
+.location-button:hover {
+  background: var(--color-location-hover);
+}
+
+.location-text {
+  margin-top: var(--space-sm);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  word-break: break-all;
+}
+
+/* Protocol view – card */
+.protocol-box {
+  margin: var(--space-md);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+.protocol-box h2,
+.protocol-box h3 {
+  margin: 0 0 var(--space-md);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.protocol-box h3 {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+}
+
+/* Back / close */
+.back-link,
+.close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition:
+    background 0.2s,
+    color 0.2s;
+  text-decoration: none;
+  border: none;
+  margin-bottom: var(--space-md);
+}
+
+.back-link {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+}
+
+.back-link:hover {
+  background: var(--color-border);
+}
+
+.close-btn {
+  background: var(--color-emergency-light);
+  color: var(--color-emergency);
+  border: 2px solid rgba(196, 30, 58, 0.3);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.close-btn:hover {
+  background: rgba(196, 30, 58, 0.15);
+}
+
+/* Sub-category buttons (e.g. adult / child CPR) */
+.sub-button {
+  display: block;
+  width: 100%;
+  padding: var(--space-lg);
+  margin: var(--space-sm) 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: right;
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.sub-button:hover {
+  background: var(--color-emergency-light);
+  border-color: rgba(196, 30, 58, 0.4);
+}
+
+/* Voice – play instructions */
+.voice-button {
+  width: 100%;
+  padding: 14px var(--space-md);
+  background: var(--color-voice);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-bottom: var(--space-lg);
+  transition: background 0.2s;
+}
+
+.voice-button:hover {
+  background: var(--color-voice-hover);
+}
+
+/* Step list – readable emergency instructions */
+.protocol-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.protocol-box li {
+  position: relative;
+  padding: var(--space-sm) 0 var(--space-sm) 2.5rem;
+  padding-right: 0;
+  padding-left: 2.5rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.protocol-box li:last-child {
+  border-bottom: none;
+}
+
+.protocol-box li::before {
+  content: counter(step);
+  counter-increment: step;
+  position: absolute;
+  right: auto;
+  left: 0;
+  top: var(--space-sm);
+  width: 1.75rem;
+  height: 1.75rem;
+  background: var(--color-emergency);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.protocol-box ul {
+  counter-reset: step;
+}
+
+/* RTL: step number on the right in RTL */
+.protocol-box li {
+  padding-left: 0;
+  padding-right: 2.5rem;
+}
+
+.protocol-box li::before {
+  left: auto;
+  right: 0;
+}
+
+/* Emergency footer – always visible, high contrast */
 .footer {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: white;
-  padding: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-md);
+  padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
   display: flex;
-  gap: 10px;
-  border-top: 1px solid #ddd;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  margin: 0 auto;
+  gap: var(--space-md);
+  background: var(--color-surface);
+  border-top: 2px solid var(--color-border);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .btn-mda {
   flex: 1;
-  padding: 15px;
-  background-color: #d32f2f;
+  padding: 16px var(--space-md);
+  background: linear-gradient(
+    180deg,
+    var(--color-emergency) 0%,
+    var(--color-emergency-dark) 100%
+  );
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 16px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(196, 30, 58, 0.35);
+  transition:
+    filter 0.2s,
+    transform 0.15s;
 }
+
+.btn-mda:hover {
+  filter: brightness(1.08);
+}
+
+.btn-mda:active {
+  transform: scale(0.98);
+}
+
 .btn-police {
   flex: 1;
-  padding: 15px;
-  background-color: #1976d2;
+  padding: 16px var(--space-md);
+  background: linear-gradient(
+    180deg,
+    var(--color-police) 0%,
+    var(--color-police-dark) 100%
+  );
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 16px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(26, 35, 126, 0.35);
+  transition:
+    filter 0.2s,
+    transform 0.15s;
+}
+
+.btn-police:hover {
+  filter: brightness(1.1);
+}
+
+.btn-police:active {
+  transform: scale(0.98);
 }
