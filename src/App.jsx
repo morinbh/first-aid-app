@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { SYMPTOMS } from './data/symptoms';
 import { getStepsAndMeta } from './utils/protocols';
 
 const EMERGENCY = { MDA: '101', POLICE: '100' };
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-function MainMenu({ searchTerm, onSearchChange, onSelectSymptom, getLocation, loadingLocation, locationInfo }) {
-  const filtered = Object.keys(SYMPTOMS).filter((n) => n.includes(searchTerm));
+function MainMenu({
+  symptoms,
+  searchTerm,
+  onSearchChange,
+  onSelectSymptom,
+  getLocation,
+  loadingLocation,
+  locationInfo,
+}) {
+  const filtered = Object.keys(symptoms).filter((n) => n.includes(searchTerm));
   return (
     <div>
       <div className="location-container">
@@ -68,6 +77,9 @@ function ProtocolView({ title, steps, onBack, onSpeak }) {
 }
 
 function App() {
+  const [symptoms, setSymptoms] = useState(SYMPTOMS);
+  const [symptomsLoading, setSymptomsLoading] = useState(false);
+  const [symptomsError, setSymptomsError] = useState(null);
   const [selectedSymptom, setSelectedSymptom] = useState(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -103,13 +115,36 @@ function App() {
     );
   };
 
-  const view = getStepsAndMeta(SYMPTOMS, selectedSymptom, selectedSubCategory);
+  useEffect(() => {
+    const fetchProtocols = async () => {
+      try {
+        setSymptomsLoading(true);
+        setSymptomsError(null);
+        const res = await fetch(`${API_BASE_URL}/api/protocols`);
+        if (!res.ok) {
+          throw new Error('Failed to load protocols');
+        }
+        const data = await res.json();
+        setSymptoms(data);
+      } catch (err) {
+        console.error(err);
+        setSymptomsError('שגיאה בטעינת פרוטוקולים מהשרת');
+      } finally {
+        setSymptomsLoading(false);
+      }
+    };
+
+    fetchProtocols();
+  }, []);
+
+  const view = getStepsAndMeta(symptoms, selectedSymptom, selectedSubCategory);
 
   return (
     <div className="app-container">
       <h1 className="main-title">🚑 עזרה ראשונה </h1>
       {!selectedSymptom && (
         <MainMenu
+          symptoms={symptoms}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           onSelectSymptom={setSelectedSymptom}
@@ -120,7 +155,7 @@ function App() {
       )}
       {selectedSymptom && view.isSubMenu && (
         <SubCategoryPicker
-          subOptions={SYMPTOMS[selectedSymptom].subOptions}
+          subOptions={symptoms?.[selectedSymptom]?.subOptions || {}}
           onSelectSub={setSelectedSubCategory}
           onClose={resetAll}
         />

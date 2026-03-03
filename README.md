@@ -20,23 +20,41 @@ A Hebrew-language first-aid reference web app. Browse step-by-step protocols for
 
 ## Tech Stack
 
-- **React 19** + **Vite 7**
-- **vite-plugin-pwa** for installability and offline support
-- Hebrew UI (RTL-friendly)
+- **Frontend**: React 19 + Vite 7, `vite-plugin-pwa` for offline/installable support, Hebrew RTL UI.
+- **Backend**: Python + Flask API serving first-aid protocols.
 
 
 ## Project Structure
 
 ```
 first-aid-app/
+├── backend/
+│   ├── app.py           # Flask app and API endpoints
+│   ├── data.py          # First-aid protocols data (Python dict)
+│   └── requirements.txt # Python dependencies
 ├── src/
-│   ├── App.jsx      # Main app, protocols data, and UI
-│   ├── App.css      # Styles
-│   └── main.jsx     # Entry point
+│   ├── App.jsx          # Main React app and UI
+│   ├── App.css          # Styles
+│   ├── data/
+│   │   └── symptoms.js  # Frontend copy of protocols (fallback / legacy)
+│   └── main.jsx         # React entry point
 ├── index.html
 ├── vite.config.js
-└── package.json
+├── package.json
+└── README.md
 ```
+
+## Development
+
+- **Backend (Flask)**:
+  - Create & activate a virtualenv (optional but recommended).
+  - Install deps: `pip install -r backend/requirements.txt`
+  - Run API: `flask --app backend.app run --port 8000`
+- **Frontend (Vite/React)**:
+  - Install deps: `npm install`
+  - Run dev server: `npm run dev`
+
+The React app calls the Flask API at `http://localhost:8000/api/protocols`. You can override the base URL with `VITE_API_BASE_URL` in your environment if needed.
 
 ## Disclaimer
 
